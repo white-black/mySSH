@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 声明包 -->
+	<!-- <constant name="struts.action.excludePattern" value="/dwr/header.jsp"/> -->
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<constant name="struts.objectFactory" value="spring"/>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<package name="myPackage"  extends="struts-default">
+		<!-- 注册 -->
+		<action name="register" class="register">
+			<result name="success">/index.jsp</result>
+			<result name="input">/register.jsp</result>
+		</action>
+		<action name="toRegister" class="register" method="toRegister">
+			<result type="redirect">
+				/register.jsp
+			</result>
+		</action>
+		<!-- 登录 -->
+		<action name="login" class="login">
+			<result name="success" type="redirect">${#session.requestPath}</result>
+			<result name="input" type="redirect">${#session.requestPath}</result>
+		</action>
+		 <!-- 管理员中心  -->
+			 <!-- 查找用户及帖子  -->
+		<action name="getEntity_userManage" class="getEntity" method="userManage">
+			<result name="success">/adminCenter.jsp</result>
+		</action>
+		<action name="getEntity_tipManage" class="getEntity" method="tipManage">
+			<result name="success">/adminCenter.jsp</result>
+		</action>
+			 <!-- 点击用户管理的时候将pageNumber初始化为1  -->
+		<action name="pageUserManage" class="page" method="userManage">
+			<result type="redirect">
+				getEntity_userManage.action?pageNumber=1&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<action name="page_userManage" class="page" method="userManage">
+			<result type="redirect">
+				getEntity_userManage.action?pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+			<!-- 点击帖子管理的时候将pageNumber初始化为1  --> 
+		<action name="pageTipManage" class="page" method="tipManage">
+			<result type="redirect">
+				getEntity_tipManage.action?pageNumber=1&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<action name="page_tipManage" class="page" method="tipManage">
+			<result type="redirect">
+				getEntity_tipManage.action?pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+			<!--  删除用户及帖子  -->
+		<action name="deleteEntity_user" class="deleteEntity" method="deleteUser">
+			<result type="redirect">
+				getEntity_userManage.action?pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<action name="deleteEntity_tip" class="deleteEntity" method="deleteTip">
+			<result type="redirect">
+				getEntity_userManage.action?pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+			<!-- 修改用户  --> 
+			<!-- 先跳转到修改用户界面  -->
+		<action name="toAlterUserPage" class="alterEntity" method="toAlterUserPage">
+			<result type="redirect">/alterEntity.jsp</result>
+		</action>
+		<action name="alterEntity_user" class="alterEntity" method="alterUser">
+			<result type="redirect">
+				page_userManage.action?pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		 <!-- 首页显示  -->
+		<action name="getEntity_board" class="getEntity" method="getBoards">
+			<result name="success">/index.jsp</result>
+		</action>
+		 <!-- 首页跳转到帖子页  -->
+		<action name="boardTips" class="getEntity" method="getTips">
+			<result name="success">/tip.jsp</result>
+		</action>
+			<!-- 第一次访问时，将pageNumber初始化为1 -->  
+		<action name="indexToTip" class="page" method="indexToTip">
+			<result type="redirect">
+				boardTips.action?boardId=${boardId}&amp;pageNumber=1&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<action name="index_Tip" class="page" method="indexToTip">
+			<result type="redirect">
+				boardTips.action?boardId=${boardId}&amp;pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<!-- 发表新帖子 -->  
+		<action name="addTip" class="addEntity" method="addTip">
+			<result type="redirect">${#session.requestPath}</result>
+		</action>
+		<!--  帖子页跳转到回复页  -->
+		<action name="tipReplys" class="getEntity" method="getReplys">
+			<result name="success">/reply.jsp</result>
+		</action>
+			<!-- 第一次访问时，将pageNumber初始化为1 -->  
+		<action name="tipToReply" class="page" method="tipToReply">
+			<result type="redirect">
+				tipReplys.action?tipId=${tipId}&amp;pageNumber=1&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<action name="tip_Reply" class="page" method="tipToReply">
+			<result type="redirect">
+				tipReplys.action?tipId=${tipId}&amp;pageNumber=${pageNumber}&amp;totalPage=${totalPage}&amp;pageSize=${pageSize}
+			</result>
+		</action>
+		<!-- 发表回复  --> 
+		<action name="addReply" class="addEntity" method="addReply">
+			<result type="redirect">${#session.requestPath}</result>
+		</action>
+	</package>
+	 <!-- 为了让ajax可以调用Struts2中的Action 配置ajax的package -->  
+	 <package name="simpleton" extends="struts-default,json-default">
+		<action name="*JsonAction" class="action.MyAjaxTestAction" method="excuteAjax">
+			<result name="fail"></result>
+			<!-- 返回json类型数据 -->
+			<result type="json">
+				<param name="root">result<!-- result是action中设置的变量名，也是页面需要返回的数据，该变量必须有setter和getter方法 -->
+				</param>
+			</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="entity">
+	<class name="entity.BBSBoard" table="bbs_board"> 
+	    <id  name="boardId" type="java.lang.Integer">
+	       <column name="boardid"></column>
+	       <generator class="sequence">
+	       		<param name="sequence">bbsboard_seq</param>
+	       </generator>
+	    </id>
+	    <property name="boardname" type="java.lang.String" length="20">
+	      <column name="boardname"></column>
+	    </property>
+	   
+	    <property name="parentId" type="java.lang.Integer">
+	       <column name="parentid"></column>
+	    </property>
+	    
+	    <set name="tips" inverse="true">
+    	<key column="boardid"></key>
+    	<one-to-many class="BBSTip"></one-to-many>
+    </set>
+	    </class>
+</hibernate-mapping>

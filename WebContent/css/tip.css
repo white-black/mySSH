@@ -1,0 +1,30 @@
+#body{
+		width:1000px;
+		margin:auto;
+}
+#location,#link{
+	text-align:right;
+	margin:20px 30px;
+}
+#display table{
+	border-collapse:collapse;
+	margin:40px auto;
+}
+#display table tr td{
+	border:1px solid #FF4400;
+	height:25px;
+	padding:5px;
+}
+.t1{
+	width:600px;
+}
+.t2{
+	width:200px;
+}
+.t3{
+	width:150px;
+}
+#publish{
+	margin:20px auto;
+	text-align:center;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="entity">
+ <class name="entity.BBSUser" table="bbs_user">
+     <id  name="userId" type="java.lang.Integer">
+       <column name="userid"></column>
+       <generator class="sequence">
+       		<param name="sequence">bbsuser_seq</param>
+       </generator>
+     </id>
+    <property name="username" type="java.lang.String" length="16">
+      <column name="username"></column>
+    </property>
+   
+    <property name="password" type="java.lang.String" length="16">
+       <column name="password"></column>
+    </property>
+    
+    <set name="tips" inverse="true">
+    	<key column="userid"></key>
+    	<one-to-many class="BBSTip"></one-to-many>
+    </set>
+     <set name="replys" inverse="true">
+    	<key column="userid"></key>
+    	<one-to-many class="BBSReply"></one-to-many>
+    </set>
+    
+ </class>
+</hibernate-mapping>
